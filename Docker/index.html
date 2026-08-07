@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>California Housing Value Estimator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="grain"></div>
+
+<header class="topbar">
+  <div class="topbar__mark">
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+      <path d="M3 15 Q7 6 11 12 T19 5" stroke="var(--poppy)" stroke-width="2" stroke-linecap="round" fill="none"/>
+    </svg>
+    <span>Golden&nbsp;State&nbsp;Valuation</span>
+  </div>
+  <div class="topbar__meta" id="model-meta">model loading&hellip;</div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="hero__copy">
+      <p class="eyebrow">1990 census block groups &middot; gradient boosted regression</p>
+      <h1>What's this parcel<br><em>actually</em> worth?</h1>
+      <p class="lede">
+        Enter the location, size, and income figures for a California
+        census block group and get an instant estimate of median home
+        value, learned from ~20,000 real block groups across the state.
+      </p>
+
+      <svg class="ridge" viewBox="0 0 420 160" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0,140 C40,110 60,60 95,70 C130,80 150,130 190,120 C230,110 250,40 300,45 C340,49 360,100 420,90 L420,160 L0,160 Z" fill="var(--sage)" opacity="0.55"/>
+        <path d="M0,150 C50,130 90,95 130,105 C170,115 190,150 240,140 C290,130 320,80 360,85 C385,88 400,110 420,120 L420,160 L0,160 Z" fill="var(--ink)" opacity="0.14"/>
+        <circle cx="330" cy="38" r="16" fill="var(--poppy)" opacity="0.9"/>
+      </svg>
+    </div>
+
+    <form class="card form" id="predict-form" autocomplete="off">
+      <div class="form__row">
+        <label for="latitude">Latitude
+          <input type="number" id="latitude" name="latitude" step="0.01" value="37.88" min="32" max="42.5" required>
+        </label>
+        <label for="longitude">Longitude
+          <input type="number" id="longitude" name="longitude" step="0.01" value="-122.23" min="-125" max="-113" required>
+        </label>
+      </div>
+
+      <label for="ocean_proximity">Ocean proximity
+        <select id="ocean_proximity" name="ocean_proximity" required></select>
+      </label>
+
+      <div class="form__row">
+        <label for="housing_median_age">Median age of homes (yrs)
+          <input type="number" id="housing_median_age" name="housing_median_age" step="1" value="41" min="0" max="60" required>
+        </label>
+        <label for="median_income">Median income <span>(x$10,000)</span>
+          <input type="number" id="median_income" name="median_income" step="0.01" value="8.33" min="0.1" required>
+        </label>
+      </div>
+
+      <div class="form__row form__row--three">
+        <label for="total_rooms">Total rooms
+          <input type="number" id="total_rooms" name="total_rooms" step="1" value="880" min="1" required>
+        </label>
+        <label for="total_bedrooms">Total bedrooms
+          <input type="number" id="total_bedrooms" name="total_bedrooms" step="1" value="129" min="1" required>
+        </label>
+        <label for="households">Households
+          <input type="number" id="households" name="households" step="1" value="126" min="1" required>
+        </label>
+      </div>
+
+      <label for="population">Population
+        <input type="number" id="population" name="population" step="1" value="322" min="1" required>
+      </label>
+
+      <button type="submit" id="submit-btn">Estimate value</button>
+      <p class="form__err" id="form-err" hidden></p>
+    </form>
+  </section>
+
+  <section class="card result" id="result" hidden>
+    <div class="result__top">
+      <span class="eyebrow">Estimated median value</span>
+      <span class="result__price" id="result-price">$0</span>
+    </div>
+    <div class="gauge">
+      <div class="gauge__track">
+        <div class="gauge__fill" id="gauge-fill"></div>
+        <div class="gauge__marker" id="gauge-marker"></div>
+      </div>
+      <div class="gauge__labels">
+        <span>$0</span>
+        <span>relative to the training set's price range</span>
+        <span>$500k+</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="card metrics" id="metrics-card">
+    <h2>Model performance</h2>
+    <p class="metrics__body">
+      A GradientBoostingRegressor evaluated on a held-out 20% test split
+      of the same census data.
+    </p>
+    <div class="metrics__grid" id="metrics-grid">
+      <div class="metric-loading">loading metrics&hellip;</div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>Trained on the classic 1990 California census housing dataset &middot; for exploration only, not a real appraisal.</p>
+</footer>
+
+<script src="/static/script.js"></script>
+</body>
+</html>

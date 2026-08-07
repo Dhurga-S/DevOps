@@ -1,0 +1,25 @@
+{
+  "rmse": 53781.15864011684,
+  "mae": 36710.28744074272,
+  "r2_score": 0.7792740226371003,
+  "n_train": 16512,
+  "n_test": 4128,
+  "features": [
+    "longitude",
+    "latitude",
+    "housing_median_age",
+    "total_rooms",
+    "total_bedrooms",
+    "population",
+    "households",
+    "median_income",
+    "ocean_proximity"
+  ],
+  "ocean_proximity_categories": [
+    "<1H OCEAN",
+    "INLAND",
+    "ISLAND",
+    "NEAR BAY",
+    "NEAR OCEAN"
+  ]
+}
